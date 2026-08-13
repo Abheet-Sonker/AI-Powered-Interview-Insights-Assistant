@@ -9,7 +9,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 # Load environment variables
 load_dotenv()
-groq_api_key = os.getenv("GROQ_API_KEY")
+groq_api_key = "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"
 
 if not groq_api_key:
     st.error("🚫 GROQ_API_KEY not set in environment!")
@@ -53,7 +53,7 @@ prompt = PromptTemplate(
 llm = ChatGroq(
     temperature=0.1,
     model_name="llama-3.1-8b-instant",
-    groq_api_key=groq_api_key
+    groq_api_key='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"
 )
 llm_chain = prompt | llm | StrOutputParser()
 

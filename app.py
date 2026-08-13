@@ -53,7 +53,7 @@ prompt = PromptTemplate(
 llm = ChatGroq(
     temperature=0.1,
     model_name="llama-3.1-8b-instant",
-    groq_api_key='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"
+    groq_api_key="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"
 )
 llm_chain = prompt | llm | StrOutputParser()
 

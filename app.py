@@ -52,7 +52,7 @@ prompt = PromptTemplate(
 # Load LLM and Chain
 llm = ChatGroq(
     temperature=0.1,
-    model_name="llama3-8b-8192",
+    model_name="llama-3.1-8b-instant",
     groq_api_key="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"
 )
 llm_chain = LLMChain(llm=llm, prompt=prompt)

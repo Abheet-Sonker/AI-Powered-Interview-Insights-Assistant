@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_groq import ChatGroq
-from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 
 # Load environment variables
 load_dotenv()
@@ -49,17 +49,17 @@ prompt = PromptTemplate(
     template=prompt_template
 )
 
-# Load LLM and Chain
+# Load LLM and Chain using modern LCEL syntax
 llm = ChatGroq(
     temperature=0.1,
     model_name="llama-3.1-8b-instant",
-    groq_api_key="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"
+    groq_api_key=groq_api_key
 )
-llm_chain = LLMChain(llm=llm, prompt=prompt)
+llm_chain = prompt | llm | StrOutputParser()
 
 # Define function to prepare input
 def prepare_input(query, company):
-    docs = retriever.get_relevant_documents(query)
+    docs = retriever.invoke(query)
     context = "\n\n".join(doc.page_content for doc in docs)
     return {"company": company, "question": query, "context": context}
 
@@ -226,7 +226,6 @@ intern_company_list = ['Amazon',
     'Vedanta Resources Limited',
     'Winzo Games']
 
-
 query_types = ["Sample Interview Questions", "Interview Process", "Resources", "Advice"]
 
 # UI Inputs
@@ -257,8 +256,7 @@ if submit:
     for q in queries:
         try:
             input_data = prepare_input(q, company)
-            result = llm_chain.invoke(input_data)
-            answer = result["text"].strip()
+            answer = llm_chain.invoke(input_data).strip()
 
             st.markdown(f"### ❓ {q}")
             st.markdown(f"**💡 Answer:**\n\n{answer}")
